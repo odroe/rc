@@ -20,8 +20,17 @@ class RuntimeConfiguration implements Getter {
   /// Current runtime configuration context.
   late final Context context;
 
+  /// The parsed configuration.
+  bool _isLoaded = false;
+
   /// Load the configuration file.
-  void load() => context = Context(this)..parse();
+  void load() {
+    if (_isLoaded == false) {
+      context = Context(this)..parse();
+    }
+
+    _isLoaded = true;
+  }
 
   @override
   T? call<T>(String key) => context<T>(key);
