@@ -9,7 +9,7 @@ class Context implements Getter {
   final RuntimeConfiguration rc;
 
   /// Get a value from the runtime configuration.
-  final Map<String, dynamic> configuration = <String, dynamic>{};
+  late final Map<String, dynamic> configuration;
 
   @override
   T? call<T>(String key) => configuration[key] as T?;
@@ -19,10 +19,9 @@ class Context implements Getter {
 
   /// Parse the runtime configuration.
   void parse() {
-    // Add environment variables.
-    configuration.addAll(rc.environment);
-
-    // Add the parsed configuration.
-    configuration.addAll(Parser(this).parse());
+    configuration = <String, dynamic>{
+      ...rc.environment,
+      ...Parser(this).parse(),
+    };
   }
 }
