@@ -1,22 +1,28 @@
-import 'dart:io';
-
+import 'getter.dart';
 import 'parser.dart';
+import 'runtime_configuration.dart';
 
-class Context {
-  late final String path;
-  late final String contents;
+class Context implements Getter {
+  Context(this.rc);
+
+  /// Current runtime configuration.
+  final RuntimeConfiguration rc;
+
+  /// Get a value from the runtime configuration.
   final Map<String, dynamic> configuration = <String, dynamic>{};
 
-  /// Parse the configuration contents.
-  void parse() {
-    // Add all environment variables to the configuration
-    configuration.addAll(Platform.environment);
+  @override
+  T? call<T>(String key) => configuration[key] as T?;
 
-    final Parser parser = Parser(
-      contents: contents,
-      configuration: configuration,
-      path: path,
-    );
-    parser.parse();
+  @override
+  bool has(String key) => configuration.containsKey(key);
+
+  /// Parse the runtime configuration.
+  void parse() {
+    // Add environment variables.
+    configuration.addAll(rc.environment);
+
+    // Add the parsed configuration.
+    configuration.addAll(Parser(this).parse());
   }
 }

@@ -1,83 +1,72 @@
 import 'constants.dart';
-import 'typed_path.dart';
+import 'context.dart';
+import 'path.dart';
 
 class Parser {
-  final String contents;
-  final Map<String, dynamic> configuration;
-  final String path;
+  Parser(this.context);
 
-  Parser({
-    required this.contents,
-    required this.configuration,
-    required this.path,
-  });
+  /// Current runtime configuration context.
+  final Context context;
 
-  late List<String> lines;
-  Map<String, dynamic> current = <String, dynamic>{};
+  Map<String, dynamic> parse() {
+    // Contents split by line.
+    final List<String> lines = context.rc.contents.split(RegExp(r'\r?\n'))
 
-  /// Parse the configuration contents.
-  void parse() {
-    lines = contents.split(RegExp(r'\r?\n'));
+      // Remove empty lines.
+      ..removeWhere((line) => line.isEmpty)
 
-    // Remove empty lines
-    lines.removeWhere((String line) => line.trim().isEmpty);
+      // Remove comments.
+      ..removeWhere((line) => line.startsWith('#'));
 
-    // Remove comments
-    lines.removeWhere((String line) => line.trim().startsWith('#'));
-
-    // Remove trailing comments
-    lines = lines.map(_removeTrailingComments).toList();
-
-    // Add key-value pairs to the current
+    // Add key-value pairs to configuration.
+    Map<String, dynamic> configuration = <String, dynamic>{};
     for (final String line in lines) {
-      _addKeyValuePair(line);
+      // Parse key and value.
+      final List<String> parts = line.split('=');
+      final String key = parts[0].trim();
+      final String value = parts.length > 1 ? parts.sublist(1).join("=") : '';
+
+      // Get line value type.
+      final Type? type = _getType(key);
+
+      // Get type removed key.
+      final String typeRemovedKey = _removeKeyType(key);
+
+      // If type is [Path], Set to configuration.
+      if (type == Path) {
+        configuration[typeRemovedKey] = Path(value.trim(), context);
+        continue;
+      }
+
+      configuration[typeRemovedKey] = _parseTypedValue(type, value.trim());
     }
 
-    // Parse key-value types
-    current = current.map<String, dynamic>((String key, dynamic value) {
-      final Type type = _getType(key);
-
-      // Skip `Path` type.
-      if (type == Path) {
-        return MapEntry<String, dynamic>(key, value);
+    // Parse variables and [Path].
+    for (final MapEntry<String, dynamic> entry in configuration.entries) {
+      if (entry.value is String) {
+        configuration[entry.key] =
+            _parseValueWithVeriables(configuration, entry.value);
+      } else if (entry.value is Path) {
+        configuration[entry.key] = _parsePath(configuration, entry.value);
       }
+    }
 
-      final String removedTypeKey = _removeKeyType(key);
-      final dynamic typedValue =
-          _parseTypedValue(type, value.toString().trim());
+    return configuration;
+  }
 
-      return MapEntry<String, dynamic>(removedTypeKey, typedValue);
-    });
+  /// Parse [Path] with variables.
+  String _parsePath(Map<String, dynamic> configuration, Path path) {
+    final String parsedPath =
+        _parseValueWithVeriables(configuration, path.path.trim());
 
-    // Parse value using variables.
-    current = current.map<String, dynamic>((String key, dynamic value) {
-      if (value is String) {
-        return MapEntry<String, dynamic>(key, _parseValueWithVeriables(value));
-      }
-
-      return MapEntry<String, dynamic>(key, value);
-    });
-
-    // Path type parse.
-    current = current.map<String, dynamic>((String key, dynamic value) {
-      final Type type = _getType(key);
-
-      if (type == Path) {
-        final String removedTypeKey = _removeKeyType(key);
-        final String parsedValye = Path(value.toString().trim(), path).parse();
-
-        return MapEntry<String, dynamic>(removedTypeKey, parsedValye);
-      }
-
-      return MapEntry<String, dynamic>(key, value);
-    });
-
-    // Add current to the configuration
-    configuration.addAll(current);
+    return Path(parsedPath.trim(), context).parse();
   }
 
   /// Parse value with variables.
-  String _parseValueWithVeriables(String value) {
+  String _parseValueWithVeriables(
+    Map<String, dynamic> configuration,
+    String value,
+  ) {
     // Find all variables
     // Example:
     // Hello, ${word} -> ['word']
@@ -101,7 +90,7 @@ class Parser {
       }
 
       final dynamic variableValue =
-          current[variable] ?? configuration[variable];
+          configuration[variable] ?? context.configuration[variable];
 
       // If veriable is not found, skip it.
       if (variableValue == null) {
@@ -109,7 +98,8 @@ class Parser {
       }
 
       final String veriableResult =
-          _parseValueWithVeriables(variableValue.toString());
+          _parseValueWithVeriables(configuration, variableValue.toString());
+
       result = result.replaceAll('\${$variable}', veriableResult);
     }
 
@@ -117,22 +107,35 @@ class Parser {
   }
 
   /// Parse the typed value.
-  dynamic _parseTypedValue(Type type, String value) {
+  dynamic _parseTypedValue(Type? type, String value) {
+    final String trimmedValue = _removeTrailingComments(value).trim();
+
     switch (type) {
       case int:
-        return int.parse(value);
+        return int.parse(trimmedValue);
       case double:
-        return double.parse(value);
+        return double.parse(trimmedValue);
       case bool:
-        return _parseBoolValue(value);
+        return _parseBoolValue(trimmedValue);
       case String:
-        return _removeStringBoundary(value);
+        return _removeStringBoundary(trimmedValue);
       case Null:
         return null;
     }
 
     // Dynamic type parse with value.
-    return _parseDynamicValue(value);
+    return _parseDynamicValue(trimmedValue);
+  }
+
+  /// Remove trailing comments.
+  String _removeTrailingComments(String line) {
+    final int index = line.indexOf('#');
+
+    if (index != -1) {
+      return line.substring(0, index).trim();
+    }
+
+    return line.trim();
   }
 
   /// Parse the dynamic value.
@@ -162,17 +165,6 @@ class Parser {
     return _removeStringBoundary(value);
   }
 
-  /// Parse boolean value.
-  bool _parseBoolValue(String value) {
-    final String lowerCaseValue = value.toLowerCase().trim();
-
-    if (lowerCaseValue == 'false' || lowerCaseValue == '0') {
-      return false;
-    }
-
-    return true;
-  }
-
   /// Remove the boundary of the string
   String _removeStringBoundary(String value) {
     // If start with ' or " and end with ' or "
@@ -188,13 +180,19 @@ class Parser {
     return value;
   }
 
+  /// Parse boolean value.
+  bool _parseBoolValue(String value) {
+    final String lowerCaseValue = value.toLowerCase().trim();
+
+    if (lowerCaseValue == 'false' || lowerCaseValue == '0') {
+      return false;
+    }
+
+    return true;
+  }
+
   /// Remove key type from the key
   String _removeKeyType(String key) {
-    // Find key pattern.
-    // Example:
-    // key -> key
-    // key(int) -> key
-    // key(string) -> key
     final RegExp pattern = RegExp(r'(?<key>.+?)(\((?<type>\w+)\))?$');
     final RegExpMatch? match = pattern.firstMatch(key.trim());
 
@@ -202,7 +200,7 @@ class Parser {
   }
 
   /// Get the type of the key
-  Type _getType(String key) {
+  Type? _getType(String key) {
     final String types = supportedTypes.join('|');
     final RegExp pattern = RegExp('\\((?<type>$types)\\)\$');
     final String? matched = pattern.firstMatch(key.trim())?.namedGroup('type');
@@ -222,26 +220,36 @@ class Parser {
         return Path;
     }
 
-    return dynamic;
-  }
-
-  /// Add a key-value pair to the configuration.
-  void _addKeyValuePair(String line) {
-    final List<String> parts = line.split('=');
-    final String key = parts[0].trim();
-    final String value = parts.length > 1 ? parts.sublist(1).join("=") : '';
-
-    current[key] = value.trim();
-  }
-
-  /// Remove trailing comments.
-  String _removeTrailingComments(String line) {
-    final int index = line.indexOf('#');
-
-    if (index != -1) {
-      return line.substring(0, index);
-    }
-
-    return line;
+    return null;
   }
 }
+
+
+//     // Parse value using variables.
+//     current = current.map<String, dynamic>((String key, dynamic value) {
+//       if (value is String) {
+//         return MapEntry<String, dynamic>(key, _parseValueWithVeriables(value));
+//       }
+
+//       return MapEntry<String, dynamic>(key, value);
+//     });
+
+//     // Path type parse.
+//     current = current.map<String, dynamic>((String key, dynamic value) {
+//       final Type type = _getType(key);
+
+//       if (type == Path) {
+//         final String removedTypeKey = _removeKeyType(key);
+//         final String parsedValye = Path(value.toString().trim(), path).parse();
+
+//         return MapEntry<String, dynamic>(removedTypeKey, parsedValye);
+//       }
+
+//       return MapEntry<String, dynamic>(key, value);
+//     });
+
+//     // Add current to the configuration
+//     configuration.addAll(current);
+//   }
+
+

@@ -29,7 +29,7 @@ typedString(string) = string
 # The path resolve from the runtime configuration file directory.
 path1(path) = lib
 path2(path) = ./lib
-path3(path) = ~
+path3(path) = ~/haha/${HOME}/lib
 path4(path) = ${HOME}/path4
 
 # trailing comment

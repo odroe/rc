@@ -1,59 +1,34 @@
 import 'context.dart';
-import 'utils/file_reader.dart';
+import 'getter.dart';
 
-abstract class RuntimeConfiguration {
-  factory RuntimeConfiguration([String path = '.rc']) =>
-      RuntimeConfigurationImpl(path);
+class RuntimeConfiguration implements Getter {
+  RuntimeConfiguration({
+    required this.contents,
+    this.root,
+    this.environment = const <String, String>{},
+  });
 
-  /// Runtime configuration file path.
-  String get path;
+  /// Path type root prefix.
+  final String? root;
 
-  /// Get a value from the runtime configuration.
-  T? call<T>(String key, [T? defaultValue]);
+  /// The configuration file contents.
+  final String contents;
 
-  /// Check if the runtime configuration has a value for the key.
-  bool has(String key);
-}
+  /// Environment variables.
+  final Map<String, String> environment;
 
-class RuntimeConfigurationImpl implements RuntimeConfiguration {
-  const RuntimeConfigurationImpl.internal(this.context);
+  /// Current runtime configuration context.
+  late final Context context;
 
-  factory RuntimeConfigurationImpl(String path) {
-    // Create a new context
-    final Context context = Context()
-      // Set resolved configuration path
-      ..path = path
+  /// Load the configuration file.
+  void load() => context = Context(this)..parse();
 
-      // Set configuration contents
-      ..contents = fileReader(path)
-
-      // Parse the configuration contents
-      ..parse();
-
-    return RuntimeConfigurationImpl.internal(context);
-  }
-
-  final Context context;
-
-  /// Runtime configuration file path.
   @override
-  String get path => context.path;
+  T? call<T>(String key) => context<T>(key);
 
-  /// Get a value from the runtime configuration.
   @override
-  T? call<T>(String key, [T? defaultValue]) {
-    if (has(key)) {
-      return context.configuration[key] as T?;
-    }
+  bool has(String key) => context.has(key);
 
-    return defaultValue;
-  }
-
-  /// Check if the runtime configuration has a value for the key.
   @override
-  bool has(String key) => context.configuration.containsKey(key);
-
-  /// To string.
-  @override
-  String toString() => context.contents;
+  String toString() => contents;
 }
