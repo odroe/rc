@@ -223,33 +223,3 @@ class Parser {
     return null;
   }
 }
-
-
-//     // Parse value using variables.
-//     current = current.map<String, dynamic>((String key, dynamic value) {
-//       if (value is String) {
-//         return MapEntry<String, dynamic>(key, _parseValueWithVeriables(value));
-//       }
-
-//       return MapEntry<String, dynamic>(key, value);
-//     });
-
-//     // Path type parse.
-//     current = current.map<String, dynamic>((String key, dynamic value) {
-//       final Type type = _getType(key);
-
-//       if (type == Path) {
-//         final String removedTypeKey = _removeKeyType(key);
-//         final String parsedValye = Path(value.toString().trim(), path).parse();
-
-//         return MapEntry<String, dynamic>(removedTypeKey, parsedValye);
-//       }
-
-//       return MapEntry<String, dynamic>(key, value);
-//     });
-
-//     // Add current to the configuration
-//     configuration.addAll(current);
-//   }
-
-
