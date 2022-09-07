@@ -1,6 +1,6 @@
 name: rc
 description: A Dart application runtime configuration.
-version: 0.0.0-dev.0
+version: 0.0.0
 repository: https://github.com/odroe/rc
 
 environment:
