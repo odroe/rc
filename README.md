@@ -85,6 +85,55 @@ value2 = "This is a variable"
 value = "This is a string with an environment variable: ${HOME}"
 ```
 
+### Human intuition path
+
+Normally it is possible to define paths using the `string` type, like this:
+
+```
+path1 = path/to
+path2 = /tmp/path/to
+```
+
+If the path you set is a relative path, it will intuitively feel that it is relative to the current configuration file.
+
+But the opposite is true. The reality is that these paths are compared to the current running directory when you use them.
+
+The solution to this problem is simple, use the `path` type of the Schema:
+
+```
+path1(path) = path/to
+```
+
+Of course, values of type path also allow environment variables and other variables:
+
+```
+path1(path) = ${HOME}/path/to
+currentHomePath(path) = ~
+```
+
+Then, you can use the `path` type to get the absolute path of the file:
+
+```dart
+final rc = RuntimeConfiguration(
+  contents: schema,
+  root: Directory.current.path,
+);
+```
+
+If you use a file or path to create a runtime configuration, the default is compared to the path of the configuration file.
+```dart
+// path/to/.rc contents:
+// path1(path) = test.txt
+// path2(path) = ../test.txt
+
+final rc = createRuntimeConfigurationFromPath(path: 'path/to/.rc');
+
+print(rc('path1')); // path/to/test.txt
+print(rc('path2')); // path/test.txt
+```
+
+When using configuration files, this configuration path is more in line with human intuition.
+
 > **Note**: More usage you can find in [.rc](.rc) file.
 
 ## Helper method with filesystem
