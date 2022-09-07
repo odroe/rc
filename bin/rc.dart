@@ -1,5 +1,7 @@
-import 'package:rc/rc.dart' as rc;
+import 'package:rc/rc.dart';
 
 void main(List<String> arguments) {
-  print('Hello world: ${rc.calculate()}!');
+  final RuntimeConfiguration rc = RuntimeConfiguration();
+
+  print(rc('trailing'));
 }

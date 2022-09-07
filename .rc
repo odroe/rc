@@ -1,0 +1,42 @@
+# Boolean value
+true = true
+false = false
+
+# Integer value
+int = 1
+
+# double value
+double = 1.0
+
+# String value
+str1 = string
+str2 = "string"
+str3 = 'string'
+
+# link value
+linkedValue1 = ${true}=true
+
+# Link a value on environment variable
+linkedValue2 = ${HOME}/demo
+
+# Typed value
+typedBoolean(bool) = true
+typedInteger(int) = 1
+typedFloat(double) = 1.0
+typedString(string) = string
+
+# Path value
+# The path resolve from the runtime configuration file directory.
+path1(path) = lib
+path2(path) = ./lib
+path3(path) = ~
+path4(path) = ${HOME}/path4
+
+# trailing comment
+trailing = true # trailing comment
+
+# null value
+null1 =
+null2
+null3(null) = null
+null4(null)
