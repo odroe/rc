@@ -139,7 +139,7 @@ When using configuration files, this configuration path is more in line with hum
 ### Parse runtime configuration from file path
 
 ```dart
-final rc = final rc = RuntimeConfiguration.from('.examplerc');
+final rc = RuntimeConfiguration.from('.examplerc');
 ```
 
 ## Example
