@@ -1,11 +1,11 @@
 import 'package:path/path.dart' show relative;
 
-import 'context.dart';
+import 'runtime_context.dart';
 
 /// Path type
 class Path {
   final String path;
-  final Context context;
+  final RuntimeContext context;
 
   const Path(this.path, this.context);
 

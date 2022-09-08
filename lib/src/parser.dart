@@ -1,12 +1,12 @@
 import 'constants.dart';
-import 'context.dart';
+import 'runtime_context.dart';
 import 'path.dart';
 
 class Parser {
   Parser(this.context);
 
   /// Current runtime configuration context.
-  final Context context;
+  final RuntimeContext context;
 
   Map<String, dynamic> parse() {
     // Contents split by line.

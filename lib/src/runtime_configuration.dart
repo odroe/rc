@@ -1,4 +1,4 @@
-import 'context.dart';
+import 'runtime_context.dart';
 import 'getter.dart';
 
 class RuntimeConfiguration implements Getter {
@@ -6,6 +6,16 @@ class RuntimeConfiguration implements Getter {
     required this.contents,
     this.root,
     this.environment = const <String, String>{},
+  }) {
+    context = RuntimeContext(this);
+  }
+
+  /// Create a new [RuntimeConfiguration] from [path].
+  external factory RuntimeConfiguration.from(
+    String path, {
+    String? root,
+    Map<String, String>? environment,
+    bool includeEnvironment = true,
   });
 
   /// Path type root prefix.
@@ -18,25 +28,16 @@ class RuntimeConfiguration implements Getter {
   final Map<String, String> environment;
 
   /// Current runtime configuration context.
-  late final Context context;
-
-  /// The parsed configuration.
-  bool _isLoaded = false;
-
-  /// Load the configuration file.
-  void load() {
-    if (_isLoaded == false) {
-      context = Context(this)..parse();
-    }
-
-    _isLoaded = true;
-  }
+  late final RuntimeContext context;
 
   @override
   T? call<T>(String key) => context<T>(key);
 
   @override
   bool has(String key) => context.has(key);
+
+  @override
+  Map<String, dynamic> get all => context.all;
 
   @override
   String toString() => contents;

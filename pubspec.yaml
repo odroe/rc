@@ -2,7 +2,7 @@ name: rc
 description: >-
   A Dart application runtime configuration library,
   Parse configuration file resolved environment variables and path.
-version: 0.0.2
+version: 0.1.0
 repository: https://github.com/odroe/rc
 
 environment:

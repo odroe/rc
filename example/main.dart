@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:rc/io.dart';
 import 'package:rc/rc.dart';
 
 void printMessage(String first, dynamic last) =>
@@ -14,7 +11,7 @@ one = This is one configuration.
 two = \${one}
 ''';
 
-  final rc = RuntimeConfiguration(contents: contents)..load();
+  final rc = RuntimeConfiguration(contents: contents);
 
   printMessage('one value', rc('one'));
   printMessage('one equals two', rc('one') == rc('two'));
@@ -22,7 +19,7 @@ two = \${one}
 
 /// File example.
 void fileExample() {
-  final rc = createRuntimeConfigurationFromFile(File('.rc'))..load();
+  final rc = RuntimeConfiguration.from('.rc');
 
   printMessage('path one', rc('path1'));
   printMessage('Int value', rc('int'));

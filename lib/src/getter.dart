@@ -4,4 +4,7 @@ abstract class Getter {
 
   /// Check if the runtime configuration has a value for the key.
   bool has(String key);
+
+  /// Get all runtime configuration.
+  Map<String, dynamic> get all;
 }

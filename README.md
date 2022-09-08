@@ -126,7 +126,7 @@ If you use a file or path to create a runtime configuration, the default is comp
 // path1(path) = test.txt
 // path2(path) = ../test.txt
 
-final rc = createRuntimeConfigurationFromPath(path: 'path/to/.rc');
+final rc = RuntimeConfiguration.from('path/to/.rc');
 
 print(rc('path1')); // path/to/test.txt
 print(rc('path2')); // path/test.txt
@@ -136,31 +136,10 @@ When using configuration files, this configuration path is more in line with hum
 
 > **Note**: More usage you can find in [.rc](.rc) file.
 
-## Helper method with filesystem
-
-These methods are exposed in `package:rc/io.dart`
-
-### Parse runtime configuration from file
-
-```dart
-import 'package:rc/io.dart';
-
-final file = File('path/to/.rc');
-final rc = createRuntimeConfigurationFromFile(file);
-```
-
 ### Parse runtime configuration from file path
 
 ```dart
-import 'package:rc/io.dart';
-
-// Default file name is .rc
-final rc1 = createRuntimeConfigurationFromPath();
-
-// Custon file name
-final rc2 = createRuntimeConfigurationFromPath(
-  path: 'path/to/.rc',
-);
+final rc = final rc = RuntimeConfiguration.from('.examplerc');
 ```
 
 ## Example
