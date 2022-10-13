@@ -1,3 +1,7 @@
+## 0.2.0
+
+Current version is **incompatible** of previous version.
+
 ## 0.1.0
 
 - Remove `package:rc/io.dart`
