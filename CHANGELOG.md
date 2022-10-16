@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Fix `toIgnoreCase`
+
 ## 0.2.1
 
 - Add `toIgnoreCase`, Convert the [Environment] to a [key] case-insensitive [Environment].

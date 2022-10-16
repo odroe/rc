@@ -72,9 +72,10 @@ class _IgnoreCaseEnvironmentImpl extends MapBase<String, String>
 
   /// Returns a [MapEntry<String, String>?], case-insensitive.
   MapEntry<String, String>? entry(Object? key) {
-    for (final MapEntry<String, String> element in entries) {
-      if (element.key.toLowerCase() == key.toString().toLowerCase()) {
-        return element;
+    final String? trimmed = key?.toString().toLowerCase().trim();
+    for (final MapEntry<String, String> entry in _environment.entries) {
+      if (entry.key.toLowerCase().trim() == trimmed) {
+        return entry;
       }
     }
 
