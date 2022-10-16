@@ -1,3 +1,8 @@
+## 0.2.1
+
+- Add `toIgnoreCase`, Convert the [Environment] to a [key] case-insensitive [Environment].
+- Add `toCaseSensitive`, Convert the [Environment] to a [key] case-sensitive [Environment].
+
 ## 0.2.0
 
 Current version is **incompatible** of previous version.

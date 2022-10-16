@@ -31,4 +31,56 @@ class _EnvironmentImpl extends MapBase<String, String> implements Environment {
 
   @override
   String? remove(Object? key) => _environment.remove(key);
+
+  @override
+  Environment toIgnoreCase() => _IgnoreCaseEnvironmentImpl(this);
+
+  @override
+  Environment toCaseSensitive() => this;
+}
+
+/// Ignore case environment implementation.
+class _IgnoreCaseEnvironmentImpl extends MapBase<String, String>
+    implements Environment {
+  /// Create a new [IgnoreCaseEnvironmentImpl] instance.
+  _IgnoreCaseEnvironmentImpl(this._environment);
+
+  /// Internal environment store.
+  final Environment _environment;
+
+  @override
+  String? operator [](Object? key) => entry(key)?.value;
+
+  @override
+  void operator []=(String key, String value) =>
+      _environment[entry(key)?.key ?? key] = value;
+
+  @override
+  void clear() => _environment.clear();
+
+  @override
+  Iterable<String> get keys => _environment.keys;
+
+  @override
+  String? remove(Object? key) => _environment.remove(entry(key)?.key ?? key);
+
+  @override
+  Environment toIgnoreCase() => this;
+
+  @override
+  bool containsKey(Object? key) => entry(key) != null;
+
+  /// Returns a [MapEntry<String, String>?], case-insensitive.
+  MapEntry<String, String>? entry(Object? key) {
+    for (final MapEntry<String, String> element in entries) {
+      if (element.key.toLowerCase() == key.toString().toLowerCase()) {
+        return element;
+      }
+    }
+
+    return null;
+  }
+
+  @override
+  Environment toCaseSensitive() => _environment;
 }

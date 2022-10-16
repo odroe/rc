@@ -33,4 +33,10 @@ abstract class Environment extends MapBase<String, String> {
     Map<String, String> environment,
     bool includePlatformEnvironment,
   }) = _EnvironmentImpl;
+
+  /// Convert the [Environment] to a [key] case-insensitive [Environment].
+  Environment toIgnoreCase();
+
+  /// Convert the [Environment] to a [key] case-sensitive [Environment].
+  Environment toCaseSensitive();
 }
