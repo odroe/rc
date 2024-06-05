@@ -1,6 +1,6 @@
 # RC
 
-RC is a configuration collection manager that uses `.` (dot) to set and read collection contents. And it is designed with loaders to load collections from various locations such as environment variables.
+RC is a configuration/collection manager that uses `.` (dot) to set and read collection contents. And it is designed with loaders to load collections from various locations such as environment variables.
 
 RC's name uses the acronym of `Runtime Configure`/`Real Collection`. You can use it as a collection container, and you can also use it as a configuration manager with a loader.
 
