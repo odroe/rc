@@ -1,7 +1,7 @@
 import 'flat.dart';
 import '_internal_utils.dart';
 
-Map<String, dynamic> _dotiable(Iterable<String> keys, value) {
+Map<String, dynamic> _internalDotiableWithKeys(Iterable<String> keys, value) {
   if (value == null) return const {};
 
   final withoutEmptyKeys = keys.withoutEmptyChildren();
@@ -22,7 +22,9 @@ extension MapDot<K, V> on Map<K, V> {
   Map<String, dynamic> _dotImpl([Iterable<String>? parent]) {
     final entries = this
         .entries
-        .map((e) => _dotiable([...?parent, e.key.toString()], e.value).entries)
+        .map((e) =>
+            _internalDotiableWithKeys([...?parent, e.key.toString()], e.value)
+                .entries)
         .flat();
 
     return Map.fromEntries(entries);
@@ -37,9 +39,20 @@ extension IterableDot<T> on Iterable<T> {
   /// Internal dot iterable impl.
   Map<String, dynamic> _dotImpl([Iterable<String>? parent]) {
     final entries = indexed
-        .map((e) => _dotiable([...?parent, e.$1.toString()], e.$2).entries)
+        .map((e) =>
+            _internalDotiableWithKeys([...?parent, e.$1.toString()], e.$2)
+                .entries)
         .flat();
 
     return Map.fromEntries(entries);
   }
+}
+
+/// Dotiable value
+dynamic dotiable(value) {
+  return switch (value) {
+    Map(dot: final dot) => dot(),
+    Iterable(dot: final dot) => dot(),
+    _ => value,
+  };
 }
