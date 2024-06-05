@@ -109,6 +109,12 @@ class RuntimeConfigure {
     _storage.removeWhere(
         (key, _) => cleanedKeys == key || key.startsWith(cleanedKeys));
   }
+
+  /// Whether this [RuntimeConfigure] contains the given [keys].
+  bool contains(String keys) {
+    final k = keys.trimDots();
+    return _storage.keys.any((e) => e == k || e.startsWith(k));
+  }
 }
 
 extension on String {
