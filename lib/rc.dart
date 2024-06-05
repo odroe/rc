@@ -1,4 +1,4 @@
-/// Runtime configuration library.
-library rc;
+library dev.odroe.rc;
 
-export 'src/environment.dart';
+export 'src/preset.dart';
+export 'src/runtime_configure.dart';

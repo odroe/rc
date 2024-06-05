@@ -1,11 +1,11 @@
 name: rc
 description: >-
   Dart environment variables for runtime configuration, `Platform.environment` wrapper.
-version: 0.2.2
+version: 0.3.0
 repository: https://github.com/odroe/rc
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: ^3.4.1
 
 dev_dependencies:
   lints: ^2.0.0
