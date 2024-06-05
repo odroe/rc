@@ -1,5 +1,5 @@
-import 'flat.dart';
-import '_internal_utils.dart';
+import '_utils.dart';
+import '_flat.dart';
 
 Map<String, dynamic> _internalDotiableWithKeys(Iterable<String> keys, value) {
   if (value == null) return const {};

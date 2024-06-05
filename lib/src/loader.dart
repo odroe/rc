@@ -3,7 +3,7 @@ abstract class Loader {
   const Loader();
 
   /// Load the configurations.
-  Map<String, dynamic> load();
+  Map<String, dynamic> load({required bool shouldWarn});
 
   /// The regression query for configuration not found during runtime configuration.
   Object? fallback(String keys) => null;

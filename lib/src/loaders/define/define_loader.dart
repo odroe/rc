@@ -1,11 +1,8 @@
 import '../../loader.dart';
 
 /// The dart `--define` configed environment preset.
-class DartDefine extends Loader {
-  const DartDefine();
-
-  @override
-  Map<String, dynamic> load() => const {};
+class DefineLoader extends Loader {
+  const DefineLoader();
 
   @override
   String? fallback(String keys) {
@@ -15,4 +12,7 @@ class DartDefine extends Loader {
 
     return null;
   }
+
+  @override
+  Map<String, dynamic> load({required bool shouldWarn}) => const {};
 }

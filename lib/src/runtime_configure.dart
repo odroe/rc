@@ -1,6 +1,6 @@
 import 'constants.dart';
 import 'loader.dart';
-import 'utils/_internal_utils.dart';
+import 'utils/_utils.dart';
 import 'utils/dot.dart';
 import 'utils/dot_operator.dart';
 
@@ -64,7 +64,7 @@ class RuntimeConfigure {
 
     _loaders.add(preset);
     for (final MapEntry(key: keys, value: value)
-        in preset.load().dot().entries) {
+        in preset.load(shouldWarn: shouldWarn(_storage)).dot().entries) {
       set(keys, value);
     }
   }

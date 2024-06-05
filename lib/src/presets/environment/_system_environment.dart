@@ -1,1 +1,0 @@
-const systemEnvironment = <String, String>{};

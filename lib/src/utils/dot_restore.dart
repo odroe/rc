@@ -1,4 +1,5 @@
-import '_internal_utils.dart';
+import '_utils.dart';
+import '_logger.dart';
 
 Object? dotRestore(value, {bool shouldWarn = true}) {
   return switch (value) {

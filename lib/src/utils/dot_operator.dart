@@ -1,4 +1,4 @@
-import '_internal_utils.dart';
+import '_utils.dart';
 import 'dot_restore.dart';
 
 T? dotOperator<T>(Map<String, dynamic> storage, String keys) {

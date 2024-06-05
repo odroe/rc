@@ -1,10 +1,9 @@
 import '../constants.dart';
+import '_logger.dart';
 
 extension StringIterableUtils on Iterable<String> {
   Iterable<String> withoutEmptyChildren() => where((e) => e.isNotEmpty);
 }
-
-void warn(String message) => print('⚠️ [odroe:rc] $message');
 
 bool shouldWarn(Map<String, dynamic> storage) {
   return switch (storage[shouldWarnKeys]) {
@@ -23,8 +22,9 @@ T? warnTypeCast<T>(String keys, value, bool shouldWarn) {
     }
   }
 
-  return switch (T) {
-    String => value.toString() as T,
-    _ => null,
-  };
+  if (T == String) {
+    return value.toString() as T;
+  }
+
+  return null;
 }
