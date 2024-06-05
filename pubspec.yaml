@@ -1,6 +1,6 @@
 name: rc
 description: >-
-  Dart environment variables for runtime configuration, `Platform.environment` wrapper.
+  RC is a configuration/collection manager that uses .(dot) to set and read collection contents.
 version: 0.3.0
 repository: https://github.com/odroe/rc
 

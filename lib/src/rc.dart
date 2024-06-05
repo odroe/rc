@@ -4,11 +4,11 @@ import 'utils/_utils.dart';
 import 'utils/dot.dart';
 import 'utils/dot_operator.dart';
 
-class RuntimeConfigure {
+class RC {
   final _storage = <String, dynamic>{};
   final _loaders = <Loader>[];
 
-  RuntimeConfigure({
+  RC({
     Map<String, dynamic>? init,
     Set<Loader>? loaders,
     bool shouldWarn = true,

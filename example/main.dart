@@ -1,7 +1,7 @@
 import 'package:rc/rc.dart';
 
 void main() {
-  final config = RuntimeConfigure();
+  final config = RC();
 
   // Whether a keys.
   print(config.contains('app.debug')); // false
