@@ -27,9 +27,9 @@ rc: latest
 import 'package:rc/rc.dart';
 
 final config = RC(init: {
-'app': {
-debug: true,
-}
+    'app': {
+        debug: true,
+    }
 });
 
 // A more concise approach 👇
@@ -78,8 +78,8 @@ config.set('app.debug', 1);
 
 // Sets a collection
 config.set('user.profile', {
-'id': 1,
-'name': 'Seven',
+    'id': 1,
+    'name': 'Seven',
 });
 ```
 
@@ -87,15 +87,15 @@ Collection values ​​also support `.` connected collections, or a mixture of 
 
 ```dart
 config.set('app.user', {
-id: 1,
-'emails.0': {id: 1, validated: true},
-'prifile': {
-id: 1,
-'posts': [
-{id: 1, title: 'First post'},
-{id: 2, title: 'Post 2'},
-],
-},
+    id: 1,
+    'emails.0': {id: 1, validated: true},
+    'prifile': {
+        'id': 1,
+        'posts': [
+            {id: 1, title: 'First post'},
+            {id: 2, title: 'Post 2'},
+        ],
+    },
 });
 ```
 
@@ -108,7 +108,7 @@ Updating a value or collection is usually a syntactic sugar for the combination 
 ```dart
 config.update<bool>('app.debug', (prev) {
 if (prev == true) return prev;
-return false;
+    return false;
 });
 ```
 
@@ -148,5 +148,5 @@ Built-in loaders:
 | Loader | Desc |
 |----|----|
 | `DefineLoader` | KV environment variables configured using `--define` in the Dart/Flutter command line |
-| `EnvironmentLoader | System environment variable loader, usually loads `Platform.environment` content. On platforms that do not support `dart:io`, no data will be loaded. Because there are no environment variables on platforms that do not support `dart:io`. |
+| `EnvironmentLoader` | System environment variable loader, usually loads `Platform.environment` content. On platforms that do not support `dart:io`, no data will be loaded. Because there are no environment variables on platforms that do not support `dart:io`. |
 | `DotenvLoader` | Load environment variable files into collections, and load `.env` files by default. `.env` is a commonly used KV format configuration file. You can also configure the search directory, or other KV configuration files in compatible formats. |
