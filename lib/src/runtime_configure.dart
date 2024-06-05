@@ -1,16 +1,16 @@
 import 'constants.dart';
-import 'preset.dart';
+import 'loader.dart';
 import 'utils/_internal_utils.dart';
 import 'utils/dot.dart';
 import 'utils/dot_operator.dart';
 
 class RuntimeConfigure {
   final _storage = <String, dynamic>{};
-  final _presets = <Preset>[];
+  final _loaders = <Loader>[];
 
   RuntimeConfigure({
     Map<String, dynamic>? init,
-    Set<Preset>? presets,
+    Set<Loader>? loaders,
     bool shouldWarn = true,
   }) {
     _storage[shouldWarnKeys] = shouldWarn;
@@ -21,9 +21,9 @@ class RuntimeConfigure {
       }
     }
 
-    if (presets != null && presets.isNotEmpty) {
-      for (final preset in presets) {
-        use(preset);
+    if (loaders != null && loaders.isNotEmpty) {
+      for (final loader in _loaders) {
+        use(loader);
       }
     }
   }
@@ -40,7 +40,7 @@ class RuntimeConfigure {
     if (result != null) return result;
 
     Object? value;
-    for (final preset in _presets.reversed) {
+    for (final preset in _loaders.reversed) {
       final result = preset.fallback(cleanedKeys);
       if (result is T) return result;
       if (result != null) value = result;
@@ -53,16 +53,16 @@ class RuntimeConfigure {
     return null;
   }
 
-  /// Use a [Preset], If preset contains in current [RuntimeConfigure] skip it.
-  void use(Preset preset) {
-    if (_presets.contains(preset)) return;
+  /// Use a [Loader], If preset contains in current [RuntimeConfigure] skip it.
+  void use(Loader preset) {
+    if (_loaders.contains(preset)) return;
 
-    /// Register depends presets.
+    /// Register depends loaders.
     for (final preset in preset.dependencies) {
       use(preset);
     }
 
-    _presets.add(preset);
+    _loaders.add(preset);
     for (final MapEntry(key: keys, value: value)
         in preset.load().dot().entries) {
       set(keys, value);
@@ -76,6 +76,8 @@ class RuntimeConfigure {
   /// config.set('a.b.c', true); // Update value { "a": { "b": { "c": true } } }
   /// ```
   void set<T>(String keys, T value) {
+    assert(keys.isNotEmpty);
+
     final cleanedKeys = keys.trimDots();
     final result = switch (dotiable(value)) {
       Map(entries: final entries) => entries

@@ -1,9 +1,9 @@
-import '../../preset.dart';
+import '../../loader.dart';
 import '../dart_define/dart_define.dart';
 import '_system_environment.dart'
     if (dart.library.io) '_system_environment.io.dart';
 
-class Environment extends Preset {
+class Environment extends Loader {
   const Environment();
 
   @override

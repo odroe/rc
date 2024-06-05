@@ -1,7 +1,7 @@
-import '../../preset.dart';
+import '../../loader.dart';
 
 /// The dart `--define` configed environment preset.
-class DartDefine extends Preset {
+class DartDefine extends Loader {
   const DartDefine();
 
   @override
