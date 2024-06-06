@@ -28,6 +28,9 @@ class RC {
     }
   }
 
+  /// Returns [RC] sources.
+  Map<String, dynamic> get sources => Map.unmodifiable(_storage);
+
   /// Returns a [T] typed value or `null`.
   ///
   /// Example:
