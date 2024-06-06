@@ -1,7 +1,7 @@
 name: rc
 description: >-
   RC is a configuration/collection manager that uses .(dot) to set and read collection contents.
-version: 0.3.2
+version: 0.3.3
 repository: https://github.com/odroe/rc
 
 environment:

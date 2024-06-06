@@ -30,7 +30,7 @@ extension RC$Environment on RC {
   String? env(String name) {
     if (name.contains('.') && shouldWarn(sources)) {
       warn(
-          'The environment variable name contains `.` symbols, please ignore warnings if intentionally used.');
+          'The environment variable $name contains `.` symbols, please ignore warnings if intentionally used.');
     }
 
     return this<String>(name);
