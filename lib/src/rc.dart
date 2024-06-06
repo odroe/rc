@@ -22,7 +22,7 @@ class RC {
     }
 
     if (loaders != null && loaders.isNotEmpty) {
-      for (final loader in _loaders) {
+      for (final loader in loaders) {
         use(loader);
       }
     }
