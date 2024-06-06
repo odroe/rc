@@ -3,7 +3,7 @@
 To install RC v0.3.1 with command:
 
 ```bash
-dart pub add orm:0.3.1
+dart pub add orm:^0.3.1
 ```
 
 Or update your `pubspec.yaml` file:

@@ -11,6 +11,7 @@ Directory? _nestFindPubspecDirectory(Directory directory, bool shouldWarn) {
   try {
     final pubspec = File(path.join(directory.path, 'pubspec.yaml'));
     if (pubspec.existsSync()) return directory;
+    if (_isOsRoot(directory)) return null;
 
     return _nestFindPubspecDirectory(directory.parent, shouldWarn);
   } catch (e) {
@@ -20,4 +21,12 @@ Directory? _nestFindPubspecDirectory(Directory directory, bool shouldWarn) {
 
     return null;
   }
+}
+
+bool _isOsRoot(Directory directory) {
+  if (Platform.isWindows) {
+    return directory.path.endsWith(':\\');
+  }
+
+  return path.relative(directory.path, from: '/') == '.';
 }
